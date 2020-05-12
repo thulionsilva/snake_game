@@ -171,22 +171,13 @@ t_snake move(t_snake g)
 /* Check if ate the dot and create new one */
 t_snake check_eat(t_snake g)
 {
-	int sx = g.pos.x[0];
-	int sy = g.pos.y[0];
-	int px = g.x;
-	int py = g.y;
+	int sx = g.pos.x[0]; /* snake position */
+	int sy = g.pos.y[0]; /* snake position */
+	int px = g.x; /* point x position */
+	int py = g.y; /* point y position */
 
-	if(sx ==  px && sy == py)
-	{
-			g.x = rand()%840 + 55;
-
-			g.y = rand()%740  + 55;
-
-		g.size += 10;
-		g.points += 1;
-	}
-
-	if(((sx + 5 >= px - 5 && sx + 5 <= px + 5) || (sx - 5 <= px + 5 && sx - 5 >= px - 5)) && (((sy + 5 >= py - 5) && (sy + 5 <= py + 5)) || (sy - 5 <= py + 5 && sy - 5 > py - 5)))
+	/* Detect when snake eat point */
+	if(abs(sx - px) < 10 && abs(sy - py) < 10)
 	{
 		g.x = rand()% 840 + 55;
 		g.y = rand()% 740 + 55;
