@@ -177,7 +177,7 @@ t_snake check_eat(t_snake g)
 	int py = g.y; /* point y position */
 
 	/* Detect when snake eat point */
-	if(abs(sx - px) < 10 && abs(sy - py) < 10)
+	if(sqrt((sx - px)*(sx - px) + (sy - py)*(sy - py)) < 10)
 	{
 		g.x = rand()% 840 + 55;
 		g.y = rand()% 740 + 55;
