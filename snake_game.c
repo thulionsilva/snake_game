@@ -31,7 +31,7 @@
 
 typedef enum snake_directions{left, up, right, down} t_directions;
 
-typedef struct position_game
+typedef struct position_game /* snake places history*/
 {
 	unsigned short  x[100000];
 	unsigned short  y[100000];
@@ -40,8 +40,8 @@ typedef struct position_game
 
 typedef struct snake
 {
-	int x;
-	int y;
+	int x; /* fruit x position */
+	int y; /* fruit y position */
 	int steps;
 	int points;
 	t_position pos;
@@ -61,15 +61,15 @@ int main(void)
 	t_snake g;
 	g.steps = 0;
 	g.points = 0;
-	g.size = 10;
+	g.size = 10; /* Snake size */
 	g.eat = 0;
-	g.x = 100;
-	g.y = 100;
+	g.x = 500; /* Inicial position */
+	g.y = 500; /* Inicial position */
 
 	for(int k = 0; k < g.size; k++)
 	{
-		g.pos.x[k] = 20 + k*10;
-		g.pos.y[k] = 20;
+		g.pos.x[k] = 300 - k;
+		g.pos.y[k] = 300;
 	}
 
 	g.dir = right;
@@ -89,8 +89,9 @@ int main(void)
 	while(!key[KEY_E])
 	{
 
-		g = move(g);
-		if(check_dead(g))
+		g = move(g); /* Move snake */
+
+		if(check_dead(g)) /* Check if the snake died */
 		{
 
 			textprintf_ex(buff, font, 400, 400, CORVERDE, CORPRETO, " VOCE MORREU");
@@ -98,16 +99,17 @@ int main(void)
 			sleep(5);
 			break;
 		}
-		for(int j = 0; j < g.size; j++)
+
+		for(int j = 0; j < g.size; j++) /* Print the full snake */
 		{
 			circlefill(buff, g.pos.x[j], g.pos.y[j], 5, CORVERMELHO);
 		}
 
 		textprintf_ex(screen, font,10 , 10, CORVERDE, CORPRETO, " Points eaten: %d", g.points);
-		rect(buff, 0,0, 900, 800, CORVERDE);
-		circlefill(buff, g.x, g.y, 5, CORVERDE);
-		g = check_eat(g);
-		draw_sprite(screen, buff, 50,50);
+		rect(buff, 0,0, 900, 800, CORVERDE); /* game frame */
+		circlefill(buff, g.x, g.y, 5, CORVERDE); /* print fruit */
+		g = check_eat(g); /* check if fruit is eaten */
+		draw_sprite(screen, buff, 50,50); /* refresh screen */
 		clear(buff);
 		usleep(1000);
 	}
@@ -122,6 +124,7 @@ END_OF_MAIN()
 /* Fuction to move the snake */
 t_snake move(t_snake g)
 {
+	/* Check which arrow was pressed */
 	if(key[KEY_UP] && g.dir != down)
 		g.dir = up;
 
@@ -135,12 +138,13 @@ t_snake move(t_snake g)
 		g.dir = right;
 
 
-	for(int k = g.size - 1; k > 0; k--)
+	for(int k = g.size - 1; k > 0; k--) /* refresh snake body position */
 	{
 		g.pos.x[k] = g.pos.x[k - 1];
 		g.pos.y[k] = g.pos.y[k - 1];
-	}
+	} 
 
+	/* Snake head new position based on direction */
 	if(g.dir == up || g.dir == down)
 	{
 		if(g.pos.y[0] == 799 && g.dir == down)
@@ -160,10 +164,6 @@ t_snake move(t_snake g)
 		else
 			g.pos.x[0] += (g.dir - 1)*1;
 	}
-
-
-
-
 	return g;
 
 }
@@ -193,7 +193,7 @@ bool check_dead(t_snake g)
 {
 	for( int k = 1; k <= g.size; k++)
 	{
-		if(g.pos.x[0] == g.pos.x[k] && g.pos.y[0] == g.pos.y[k])
+		if(g.pos.x[0] == g.pos.x[k] && g.pos.y[0] == g.pos.y[k]) /* Check if head touch any part of the body */
 			return true;
 	}
 	return false;
